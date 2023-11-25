@@ -13,11 +13,14 @@
 # 4. Использование функций. Ваша программа
 # не должна быть линейной
 
+# DZ_8 - Дополнить справочник возможностью копирования данных
+# из одного файла в другой. Пользователь вводит номер строки, 
+# которую необходимо перенести из одного файла в другой.
+
 from csv import DictReader, DictWriter
 from os.path import exists
 
-file_name = 'Seminar8\phones.csv'
-file_name_in = 'Seminar8\phones_book.txt'
+file_name = 'phones.csv'
 
 class LenNumberError(Exception):
     def __init__(self, txt):
@@ -54,18 +57,10 @@ def get_info():
 
     return [first_name, last_name, phone_number]
 
-def get_copy_line():
-    line_index = int(input("Введите номер строки для копирования: ")) - 1
-    return line_index
-
 def create_file(file_name):
     with open(file_name, 'w', encoding='utf-8') as data:
         f_writer = DictWriter(data, fieldnames=['Имя', 'Фамилия', 'Телефон'])
         f_writer.writeheader()
-
-def create_file_txt(file_name_in):
-    with open(file_name_in, 'w', encoding='utf-8') as data:
-        data.write()
 
 def write_file(lst):
     with open(file_name, 'r', encoding='utf-8') as data:
@@ -89,25 +84,6 @@ def read_file(file_name):
     with open(file_name, 'r', encoding='utf-8') as data:
         f_reader = DictReader(data)
         return list(f_reader)
-
-#Копирование записи из одного файла в другой (добавление в конец)
-def copy_file_line(file_name, file_name_in, line_index):
-    res_line = []
-    with open(file_name, 'r', encoding='utf-8') as data:
-        f_reader = data.read()
-        res = list(f_reader.split("\n"))
-        if line_index < len(res):
-            res_line.append(res[line_index])
-        else:
-            print('Такой строки в файле нет!\n')
-                     
-    with open(file_name_in, 'a', encoding='utf-8') as data_1:
-        data_1.seek(2)
-        data_1.write("\n")
-        data_1.writelines("\n".join(res_line))
-
-    if line_index < len(res):
-        print(f'Строка № {line_index + 1} скопирована.\n')
     
 def main():
     while True:
@@ -124,8 +100,5 @@ def main():
                 print('Файл отсутствует')
                 continue
             print(*read_file(file_name))
-        elif command == 'c':
-            copy_file_line(file_name, file_name_in, get_copy_line())
-
 
 main()
